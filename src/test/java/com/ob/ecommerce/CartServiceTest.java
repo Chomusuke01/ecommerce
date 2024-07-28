@@ -2,6 +2,7 @@ package com.ob.ecommerce;
 
 import com.ob.ecommerce.dto.CartDto;
 import com.ob.ecommerce.exception.CartNotFoundException;
+import com.ob.ecommerce.exception.NotValidProductException;
 import com.ob.ecommerce.model.Cart;
 import com.ob.ecommerce.model.Product;
 import com.ob.ecommerce.repository.CartRepository;
@@ -82,6 +83,15 @@ class CartServiceTest {
 
         Assertions.assertThat(updatedCart.getId()).isEqualTo(cartId);
         Assertions.assertThat(updatedCart.getProducts()).hasSize(expectedSize);
+    }
+
+    @Test
+    void ensureNotValidProduct() {
+
+        Product product = new Product(null, "Mouse", 12.95);
+
+        when(cartRepository.getById(cartId)).thenReturn(Optional.of(cart));
+        assertThrows(NotValidProductException.class, () -> cartService.addProductsToCart(cartId, product));
     }
 
     @Test

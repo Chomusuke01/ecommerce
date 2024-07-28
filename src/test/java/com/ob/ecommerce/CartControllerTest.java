@@ -1,8 +1,10 @@
 package com.ob.ecommerce;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ob.ecommerce.controller.CartController;
 import com.ob.ecommerce.dto.CartDto;
 import com.ob.ecommerce.exception.CartNotFoundException;
+import com.ob.ecommerce.exception.NotValidProductException;
 import com.ob.ecommerce.model.Product;
 import com.ob.ecommerce.service.CartService;
 import org.hamcrest.CoreMatchers;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -39,6 +42,9 @@ class CartControllerTest {
 
     @MockBean
     private CartService cartService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private CartDto emptyCart;
     private CartDto cartWithProd;
@@ -103,5 +109,20 @@ class CartControllerTest {
         ResultActions response = mockMvc.perform(get("/api/v1/cart/3"));
 
         response.andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    void ensureNotValidProduct() throws Exception {
+
+        int cartID = 1;
+        Product product = new Product(null, "Mouse", 19.95);
+
+        when(cartService.addProductsToCart(cartID, product)).thenThrow(NotValidProductException.class);
+
+        ResultActions response = mockMvc.perform(post("/api/v1/cart/1/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(product)));
+
+        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }

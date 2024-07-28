@@ -1,17 +1,17 @@
 package com.ob.ecommerce.model;
 
 public class Product {
-    private final int id;
+    private final Integer id;
     private String description;
-    private double amount;
+    private Double amount;
 
-    public Product(int id, String description, double amount) {
+    public Product(Integer id, String description, Double amount) {
         this.id = id;
         this.description = description;
         this.amount = amount;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -23,11 +23,11 @@ public class Product {
         this.description = description;
     }
 
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 }

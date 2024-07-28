@@ -2,6 +2,7 @@ package com.ob.ecommerce.service;
 
 import com.ob.ecommerce.dto.CartDto;
 import com.ob.ecommerce.exception.CartNotFoundException;
+import com.ob.ecommerce.exception.NotValidProductException;
 import com.ob.ecommerce.repository.Repository;
 import com.ob.ecommerce.model.Cart;
 import com.ob.ecommerce.model.Product;
@@ -55,10 +56,27 @@ public class CartServiceImpl implements CartService{
     public CartDto addProductsToCart(int cartId, Product ... products) {
         Cart cart = repository.getById(cartId).orElseThrow(() -> new CartNotFoundException(cartId));
 
-        Arrays.stream(products).forEach(cart::addProduct);
+        Arrays.stream(products).forEach(product -> this.addProduct(product, cart));
         cart.setLastUpdated(LocalDateTime.now());
         repository.save(cart);
 
         return mapToDto(cart);
+    }
+
+    private void addProduct(Product product, Cart cart) {
+        checkProduct(product);
+        cart.addProduct(product);
+    }
+
+    private void checkProduct(Product product) {
+        if (product.getId() == null){
+            throw new NotValidProductException("ID");
+        }
+        if (product.getDescription() == null) {
+            throw new NotValidProductException("Description");
+        }
+        if (product.getAmount() == null){
+            throw new NotValidProductException("Amount");
+        }
     }
 }
