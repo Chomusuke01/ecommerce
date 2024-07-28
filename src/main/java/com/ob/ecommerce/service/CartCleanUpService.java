@@ -2,7 +2,6 @@ package com.ob.ecommerce.service;
 
 import com.ob.ecommerce.repository.Repository;
 import com.ob.ecommerce.model.Cart;
-import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,10 +22,6 @@ public class CartCleanUpService {
         this.repository = repository;
     }
 
-    @PostConstruct
-    public void onStartUp (){
-        deleteInactiveCarts();
-    }
 
     @Scheduled(cron = "0 */10 * * * ?")
     public void deleteInactiveCarts(){
