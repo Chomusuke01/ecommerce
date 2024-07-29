@@ -23,6 +23,7 @@ public class CartServiceImpl implements CartService{
     @Override
     public CartDto createCart() {
         Cart cart = new Cart();
+        cart.setLastUpdated(LocalDateTime.now());
         return mapToDto(this.repository.save(cart));
     }
 
