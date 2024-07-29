@@ -54,6 +54,8 @@ mvn -v
     ```sh
     java -jar target/ecommerce-0.0.1.jar
     ```
+   
+If preferred, you can download and run [this](https://github.com/Chomusuke01/ecommerce/releases/tag/v0.0.1) jar file to save the hassle of building it yourself (make sure you have Java 17 installed).
 
 ## Functionality
 
